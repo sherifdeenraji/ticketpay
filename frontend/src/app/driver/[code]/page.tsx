@@ -1,5 +1,5 @@
 'use client';
-
+export const runtime = "edge";
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { format } from 'date-fns';
