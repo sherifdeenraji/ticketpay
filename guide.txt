@@ -1,0 +1,483 @@
+# OAU Digital Transport Ticketing System
+
+## Project Requirements & Functional Specification
+
+### Background
+
+The current transport system in Obafemi Awolowo University (OAU) operates using a prepaid ticket model. Students purchase physical transport tickets before boarding buses or tricycles, and transport operators collect these tickets from passengers. OAU recently introduced a centralized cashless transport framework with a strict "No Cash" policy, requiring passengers to obtain tickets before boarding. Tickets currently cost ₦100 per ride ("per drop").
+
+This project aims to replace the physical ticket system with a fully digital payment platform that allows students to pay for transport rides directly from their phones.
+
+---
+
+# System Overview
+
+The platform consists of:
+
+1. Student/User Application
+2. Admin Dashboard
+3. Wallet & Payment System
+4. QR Code Payment System
+5. Driver Public Statistics Page
+
+---
+
+# User Features
+
+## Authentication
+
+Users should be able to:
+
+### Registration
+
+* Create account using:
+
+  * Full Name
+  * Email Address
+  * Password
+
+### Login
+
+* Email + Password
+
+### Social Login
+
+* Sign in with Google
+
+### Password Recovery
+
+* Forgot Password
+* Email OTP verification
+* Reset Password
+
+### Email Verification
+
+* Verify account after registration
+
+### Session Management
+
+* Logout
+* Remember Me
+* Secure JWT Authentication (httpOnly and it's not likely both backend and frontend will be hosted in the same server)
+
+---
+
+# User Wallet System
+
+Each user has a wallet.
+
+### Wallet Features
+
+* Wallet Balance
+* Fund Wallet
+* Wallet Transaction History
+
+### Funding Method
+
+Integrate with:
+
+* SecureWave NG
+
+Funding flow:
+
+1. User enters amount.
+2. Redirect to SecureWave NG payment gateway.
+3. Payment successful.
+4. Wallet credited automatically.
+5. Transaction recorded.
+
+---
+
+# Ride Payment System
+
+Instead of buying physical tickets, users will pay digitally.
+
+---
+
+## Driver Code Payment
+
+Every registered driver receives:
+
+* Unique Driver Code
+* Example:
+
+DRV001
+DRV002
+DRV003
+
+Payment flow:
+
+1. User boards vehicle.
+
+2. Driver provides code.
+
+3. User enters code.
+
+4. System validates code.
+
+5. User selects number of tickets:
+
+   * 1 Ticket
+   * 2 Tickets
+   * 3 Tickets
+   * Custom Quantity (Optional)
+
+6. System calculates amount automatically.
+
+Example:
+
+Ticket Price = ₦100
+
+2 Tickets = ₦200
+
+3 Tickets = ₦300
+
+7. User confirms payment.
+8. Amount deducted from wallet.
+9. Driver receives payment record instantly.
+
+---
+
+## QR Code Payment
+
+Alternative payment method.
+
+Each driver has:
+
+* Unique QR Code
+
+Payment flow:
+
+1. User taps "Scan QR".
+2. Camera opens.
+3. Scan driver's QR Code.
+4. Driver information loads.
+5. User selects ticket quantity.
+6. Wallet charged.
+7. Payment completed.
+
+---
+
+# Digital Ticket Record
+
+For every payment:
+
+Generate:
+
+* Transaction ID
+* Driver Code
+* Driver Name
+* Number of Tickets
+* Amount Paid
+* Date
+* Time
+
+Store permanently.
+
+---
+
+# User Transaction History
+
+Users can view:
+
+### Wallet Funding History
+
+* Amount
+* Date
+* Status
+
+### Ride Payment History
+
+* Driver
+* Tickets Purchased
+* Amount
+* Time
+
+### Filters
+
+* Today
+* This Week
+* This Month
+* All Time
+
+---
+
+# Notifications
+
+### Push Notifications
+
+Send when:
+
+* Wallet funded
+* Ride paid successfully
+* Password changed
+* Account verified
+
+
+---
+
+# Driver Management
+
+Drivers cannot self-register.
+
+Only Admin can create drivers.
+
+---
+
+## Driver Creation
+
+Admin enters:
+
+* Driver Name
+* Phone Number
+* Vehicle Type
+
+  * Bus
+  * Keke
+* Vehicle Number
+* Route (nullable)
+* Driver Photo (nullable)
+
+System generates:
+
+* Driver Code
+* QR Code
+
+
+
+### Transaction List
+
+Show:
+
+* Student Name
+* Amount Paid
+* Ticket Quantity
+* Time
+
+---
+
+# Public Driver Page
+
+Every driver should have a public URL.
+
+Example:
+
+/driver/DRV001
+
+or
+
+/driver/abc123xyz
+
+No login required.
+
+---
+
+## Public Driver Report
+
+Display:
+
+### Driver Information
+
+* Driver Name
+* Driver Code
+* Vehicle Number
+
+### Today's Payments
+
+Table:
+
+| Name     | Tickets | Time    |
+| -------- | ------- | ------- |
+| John Doe | 2       | 8:15 AM |
+| Mary Ade | 1       | 8:22 AM |
+
+---
+
+### Daily Summary
+
+At bottom display:
+
+Total Tickets Today: 125
+
+Total Amount Today: ₦12,500
+
+Last Updated: 3:45 PM
+
+---
+
+# Admin Dashboard
+
+Admin should have full control.
+
+---
+
+## User Management
+
+View:
+
+* Users
+* Wallet Balance
+* Status
+* Registration Date
+
+Actions:
+
+* Suspend User
+* Activate User
+* Reset Password
+
+---
+
+## Driver Management
+
+Create Driver
+
+Edit Driver
+
+Deactivate Driver
+
+Generate New QR Code
+
+Generate New Driver Code
+
+---
+
+## Ticket Settings
+
+Admin can change:
+
+Current Ticket Price
+
+Example:
+
+₦100
+
+Future:
+
+₦150
+
+System should automatically use latest value.
+
+---
+
+## Payment Monitoring
+
+View:
+
+* All Wallet Funding
+* All Ride Payments
+* Failed Payments
+
+Search by:
+
+* User
+* Driver
+* Date
+
+---
+
+## Reports
+
+Generate:
+
+### Daily Report
+
+* Total Tickets Sold
+* Total Revenue
+* Active Drivers
+
+### Weekly Report
+
+### Monthly Report
+
+Export:
+
+* PDF
+* Excel
+
+---
+
+# Security Requirements
+
+### Authentication
+
+* JWT  cookies(httpOnly)
+
+### Passwords
+
+* Bcrypt Hashing
+
+### Payment Security
+
+* Verify SecureWave NG webhooks
+* Prevent duplicate payments
+
+### QR Security
+
+* Dynamic encrypted driver identifier
+* No editable QR parameters
+
+### Rate Limiting
+
+Protect:
+
+* Login
+* Forgot Password
+* Funding Requests
+
+---
+
+# Database Entities
+
+## Users
+
+* id
+* firstname
+* lastname
+* email
+* password
+* wallet_balance
+* created_at
+
+## Drivers
+
+* id
+* name
+* driver_code
+* qr_code
+* route
+* vehicle_number
+* status
+
+## WalletTransactions
+
+* id
+* user_id
+* amount
+* type
+* status
+* created_at
+
+## RidePayments
+
+* id
+* user_id
+* driver_id
+* ticket_count
+* amount
+* created_at
+
+## TicketSettings
+
+* id
+* ticket_price
+* effective_date
+
+---
+
+## Goal
+
+Replace OAU's physical transport ticket system with a secure digital wallet and QR-based payment platform that allows students to pay for rides instantly, drivers to track tickets in real time, and administrators to monitor transport revenue and operations efficiently.
+frontend (nextjs, shadcn,radixUI and tailwind already setup)
+admin (nextjs, shadcn, radixUI and tailwind already setup)
+backend(express, postgresql)
