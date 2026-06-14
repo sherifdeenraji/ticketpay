@@ -76,11 +76,11 @@ export const paymentsService = {
             );
 
             // 6. Log notification (internal) - Optional: add notification logic here
-            // await client.query(
-            //     `INSERT INTO notifications (user_id, title, message)
-            //      VALUES ($1, $2, $3)`,
-            //     [user_id, 'Payment Successful', `You paid ₦${totalAmount} for ${ticket_count} ticket(s) to ${driver_code}.`]
-            // );
+            await client.query(
+                `INSERT INTO notifications (user_id, title, message)
+                 VALUES ($1, $2, $3)`,
+                [user_id, 'Payment Successful', `You paid ₦${totalAmount} for ${ticket_count} ticket(s) to ${driver_code}.`]
+            );
 
             // 7. Log wallet debit transaction
             const walletTxRef = `RIDE-${transactionId}`;
